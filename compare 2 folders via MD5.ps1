@@ -7,6 +7,9 @@
 $basefolder = "c:\ref"
 #Variable for new folder
 $Newfolder = "c:\changed"
+#Variable for time
+$hour = (Get-Date).Hour
+$min = (Get-Date).Minute
 
 Compare-Object -ReferenceObject (dir $basefolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash) -differenceObject (dir $Newfolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash)
 
@@ -17,7 +20,7 @@ Compare-Object -ReferenceObject (dir $basefolder -Recurse | Where-Object {!$_.ps
 #The command is shown here.
 ##########
 #                                                                                                        Insert MD5 here
-dir $Newfolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash | ? {$_.hashstring -match 'DE1278022BF9A1A6CB6AAC0E5BEE1C5B'}
+#dir $Newfolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash | ? {$_.hashstring -match 'DE1278022BF9A1A6CB6AAC0E5BEE1C5B'}
 
 
 ##################################################################################
@@ -25,8 +28,9 @@ dir $Newfolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash | ? {$_.h
 #I use essentially the same commands to find the differences between the two files. First, 
 #I make sure that I know the reference file that changed. Here is the command that I use for that:
 ########
-PS C:\> dir $base -Recurse | Where-Object {!$_.psiscontainer } | get-hash | ? { $_.hashstring -match '32B72AF6C2FF057E7C63C715449BFB6A'}
+#PS C:\> dir $basefolder -Recurse | Where-Object {!$_.psiscontainer } | get-hash | ? { $_.hashstring -match '32B72AF6C2FF057E7C63C715449BFB6A'}
 ########
 #When I have ensured that it is, in fact, the a.txt file that has changed between the reference folder and the changed folder
 #I again use the Compare-Object cmdlet to compare the content of the two files. Here is the command I use to compare the two files:
-Compare-Object -ReferenceObject (Get-Content $basefolder\a.txt) -DifferenceObject(Get-Content $Newfolder\a.txt)
+Compare-Object -ReferenceObject (Get-Content $basefolder\fooderdocx.csv) -DifferenceObject(Get-Content $Newfolder\fooderdocx-no-unique.csv)|`
+Export-Csv $Newfolder\filecompare-$hour-$min.csv
